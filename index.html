@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RIMOA — Research of Modern Organic Agriculture</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --green-dark: #0f2318;
+    --green-mid: #1e4d2b;
+    --green-accent: #2d7a45;
+    --green-light: #4caf72;
+    --cream: #f5f0e8;
+    --warm-white: #faf8f4;
+    --text-dark: #0f2318;
+    --text-muted: #5a7a62;
+    --gold: #c9a84c;
+    --border: rgba(45, 122, 69, 0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    background: rgba(250, 248, 244, 0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 700;
+    color: var(--green-mid);
+    letter-spacing: 0.05em;
+  }
+
+  .nav-logo span { color: var(--green-light); }
+
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+
+  .nav-links a {
+    font-size: 13px; font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--green-accent); }
+
+  .nav-cta {
+    background: var(--green-mid);
+    color: white !important;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 12px !important;
+  }
+
+  .nav-cta:hover { background: var(--green-accent); color: white !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 100px 48px 60px;
+    background: var(--green-dark);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(45,122,69,0.3) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(76,175,114,0.1) 0%, transparent 50%);
+  }
+
+  .hero-grid-overlay {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(76,175,114,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(76,175,114,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content { position: relative; z-index: 1; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(76,175,114,0.15);
+    border: 1px solid rgba(76,175,114,0.3);
+    color: var(--green-light);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green-light);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 300;
+    color: white;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 em { font-style: italic; color: var(--green-light); }
+
+  .hero p {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 16px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--green-light);
+    color: var(--green-dark);
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 600; font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+
+  .btn-primary:hover { background: #5dc87f; transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 500; font-size: 14px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.4); }
+
+  /* HERO STATS */
+  .hero-stats {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-left: 60px;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+  }
+
+  .stat-card:hover { background: rgba(255,255,255,0.08); transform: translateY(-4px); }
+
+  .stat-card.featured {
+    grid-column: 1/-1;
+    background: rgba(76,175,114,0.12);
+    border-color: rgba(76,175,114,0.2);
+  }
+
+  .stat-icon { font-size: 28px; margin-bottom: 12px; }
+
+  .stat-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 600;
+    color: white; line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-value span { color: var(--green-light); }
+
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  /* SECTION BASE */
+  section { padding: 100px 48px; }
+
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .section-tag::before {
+    content: '';
+    display: block;
+    width: 24px; height: 2px;
+    background: var(--green-accent);
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--green-dark);
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    font-size: 16px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    max-width: 580px;
+  }
+
+  /* ABOUT */
+  #about {
+    background: var(--warm-white);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+
+  .about-visual {
+    position: relative;
+    height: 480px;
+  }
+
+  .about-img-main {
+    width: 75%; height: 85%;
+    background: linear-gradient(135deg, var(--green-mid), var(--green-accent));
+    border-radius: 20px;
+    position: absolute; bottom: 0; right: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 80px;
+  }
+
+  .about-img-accent {
+    width: 55%; height: 50%;
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    position: absolute; top: 0; left: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px;
+  }
+
+  .about-img-accent .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px; font-weight: 700;
+    color: var(--green-mid);
+  }
+
+  .about-img-accent .lbl { font-size: 12px; color: var(--text-muted); }
+
+  .about-pillars {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin-top: 36px;
+  }
+
+  .pillar {
+    padding: 20px;
+    background: var(--cream);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
+  .pillar-icon { font-size: 22px; margin-bottom: 8px; }
+  .pillar h4 { font-size: 14px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+  .pillar p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  /* DASHBOARD / RESEARCH */
+  #research { background: var(--cream); }
+
+  .research-header { margin-bottom: 48px; }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+  }
+
+  .dash-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: box-shadow 0.3s;
+  }
+
+  .dash-card:hover { box-shadow: 0 8px 32px rgba(15,35,24,0.08); }
+
+  .dash-card.wide { grid-column: 1/2; }
+  .dash-card.tall { grid-column: 2/3; grid-row: 1/3; }
+  .dash-card.full { grid-column: 1/2; }
+
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 600;
+    color: var(--green-dark);
+  }
+
+  .card-badge {
+    font-size: 11px; padding: 4px 10px;
+    background: rgba(76,175,114,0.1);
+    color: var(--green-accent);
+    border-radius: 100px; font-weight: 500;
+  }
+
+  /* Filter tabs */
+  .filter-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+
+  .filter-tab {
+    padding: 8px 18px;
+    border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-tab.active, .filter-tab:hover {
+    background: var(--green-mid);
+    color: white; border-color: var(--green-mid);
+  }
+
+  .findings-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .finding-item {
+    padding: 18px;
+    background: var(--cream);
+    border-radius: 12px;
+    border-left: 3px solid var(--green-light);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .finding-item:hover { transform: translateX(4px); }
+  .finding-item.hidden { display: none; }
+
+  .finding-item h4 { font-size: 14px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+  .finding-item p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+  .finding-meta {
+    display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+  }
+
+  .finding-tag {
+    font-size: 11px; padding: 3px 10px;
+    background: white; color: var(--green-accent);
+    border-radius: 100px; border: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  /* Metrics column */
+  .metrics-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .metric-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .metric-item:last-child { border-bottom: none; }
+
+  .metric-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .metric-name { font-size: 13px; font-weight: 500; color: var(--text-dark); }
+  .metric-val { font-size: 13px; font-weight: 600; color: var(--green-accent); }
+
+  .progress-bar { height: 6px; background: var(--cream); border-radius: 99px; overflow: hidden; }
+  .progress-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--green-accent), var(--green-light));
+    transition: width 1.5s ease;
+  }
+
+  /* TEAM */
+  #team { background: var(--warm-white); }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 24px; margin-top: 48px;
+  }
+
+  .team-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .team-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(15,35,24,0.1); }
+
+  .team-avatar {
+    height: 180px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    position: relative;
+  }
+
+  .team-avatar.bg1 { background: linear-gradient(135deg, #e8f5ee, #c8e6d4); }
+  .team-avatar.bg2 { background: linear-gradient(135deg, #e8f0f5, #c8d8e6); }
+  .team-avatar.bg3 { background: linear-gradient(135deg, #f5f0e8, #e6dcc8); }
+  .team-avatar.bg4 { background: linear-gradient(135deg, #f5e8ee, #e6c8d4); }
+
+  .team-info { padding: 20px; }
+  .team-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--green-dark); margin-bottom: 4px; }
+  .team-role { font-size: 12px; color: var(--green-accent); font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .team-bio { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  .team-socials { display: flex; gap: 10px; margin-top: 14px; }
+  .social-btn {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .social-btn:hover { background: var(--green-mid); }
+
+  /* PARTNERS */
+  #partners { background: var(--cream); }
+
+  .partners-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
+
+  .partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+  }
+
+  .partner-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 20px;
+    display: flex; flex-direction: column;
+    align-items: center; text-align: center;
+    gap: 12px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .partner-card:hover { border-color: var(--green-light); transform: translateY(-4px); box-shadow: 0 12px 32px rgba(15,35,24,0.07); }
+
+  .partner-logo { font-size: 36px; }
+  .partner-name { font-size: 15px; font-weight: 600; color: var(--green-dark); }
+  .partner-type { font-size: 12px; color: var(--text-muted); }
+
+  .partner-badge {
+    font-size: 10px; padding: 3px 10px;
+    border-radius: 100px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-gold { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.3); }
+  .badge-silver { background: rgba(90,122,98,0.1); color: var(--text-muted); border: 1px solid var(--border); }
+
+  /* CONTACT */
+  #contact {
+    background: var(--green-dark);
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start;
+  }
+
+  #contact .section-title { color: white; }
+  #contact .section-tag { color: var(--green-light); }
+  #contact .section-tag::before { background: var(--green-light); }
+  #contact .section-sub { color: rgba(255,255,255,0.5); }
+
+  .contact-info { display: flex; flex-direction: column; gap: 24px; margin-top: 36px; }
+
+  .contact-item {
+    display: flex; gap: 16px; align-items: flex-start;
+  }
+
+  .contact-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: rgba(76,175,114,0.1);
+    border: 1px solid rgba(76,175,114,0.2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .contact-detail h4 { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
+  .contact-detail p { font-size: 15px; color: white; }
+
+  .contact-form { display: flex; flex-direction: column; gap: 16px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+
+  .form-group label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; text-transform: uppercase; }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: white;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
+
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--green-light); }
+
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .form-group select option { background: var(--green-dark); }
+
+  .form-submit {
+    background: var(--green-light);
+    color: var(--green-dark);
+    padding: 15px 32px;
+    border: none; border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    align-self: flex-start;
+  }
+
+  .form-submit:hover { background: #5dc87f; transform: translateY(-2px); }
+
+  .form-success {
+    display: none;
+    background: rgba(76,175,114,0.15);
+    border: 1px solid rgba(76,175,114,0.3);
+    border-radius: 12px; padding: 20px;
+    color: var(--green-light); text-align: center;
+    font-size: 15px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #080f0c;
+    padding: 40px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 700;
+    color: white;
+  }
+
+  .footer-logo span { color: var(--green-light); }
+
+  .footer-copy { font-size: 13px; color: rgba(255,255,255,0.3); }
+
+  .footer-links { display: flex; gap: 24px; }
+
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.3); text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: var(--green-light); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-up {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* COUNTER */
+  .counter { display: inline-block; }
+
+  /* Responsive basics */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    section, .hero, #about, #contact { padding: 72px 24px; }
+    .hero, #about, #contact { grid-template-columns: 1fr; }
+    .hero-stats { padding-left: 0; grid-template-columns: 1fr 1fr; }
+    .stat-card.featured { grid-column: 1/-1; }
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .dash-card.tall { grid-column: 1; grid-row: auto; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">RIM<span>OA</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#contact" class="nav-cta">Contact Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid-overlay"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">Est. 2019 · Thailand</div>
+    <h1>Pioneering<br><em>Modern Organic</em><br>Agriculture</h1>
+    <p>RIMOA bridges cutting-edge agricultural science with sustainable organic practices — cultivating data-driven insights for a healthier planet.</p>
+    <div class="hero-actions">
+      <a href="#research" class="btn-primary">Explore Research</a>
+      <a href="#about" class="btn-outline">Learn More</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-card featured">
+      <div class="stat-icon">🌱</div>
+      <div class="stat-value"><span class="counter" data-target="47">0</span>+</div>
+      <div class="stat-label">Active Research Studies</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔬</div>
+      <div class="stat-value"><span class="counter" data-target="12">0</span></div>
+      <div class="stat-label">Published Papers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🤝</div>
+      <div class="stat-value"><span class="counter" data-target="8">0</span></div>
+      <div class="stat-label">Partner Organizations</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual fade-up">
+    <div class="about-img-accent">
+      <div class="num">2019</div>
+      <div class="lbl">Founded in Thailand</div>
+    </div>
+    <div class="about-img-main">🌾</div>
+  </div>
+
+  <div class="fade-up">
+    <div class="section-tag">About RIMOA</div>
+    <h2 class="section-title">Where Science Meets<br>Sustainable Farming</h2>
+    <p class="section-sub">RIMOA (Research Institute of Modern Organic Agriculture) is dedicated to advancing organic farming through rigorous scientific inquiry, field experimentation, and community-driven knowledge sharing.</p>
+
+    <div class="about-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🧪</div>
+        <h4>Scientific Rigor</h4>
+        <p>Evidence-based methodologies and peer-reviewed research standards.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌍</div>
+        <h4>Sustainability</h4>
+        <p>Long-term ecological balance and soil health preservation.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">👥</div>
+        <h4>Community</h4>
+        <p>Empowering local farmers with accessible, actionable insights.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📊</div>
+        <h4>Data-Driven</h4>
+        <p>Real-time monitoring and precision analytics for crop management.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH DASHBOARD -->
+<section id="research">
+  <div class="research-header fade-up">
+    <div class="section-tag">Research Dashboard</div>
+    <h2 class="section-title">Our Key Findings</h2>
+    <p class="section-sub">Explore our latest research data, yield improvements, and field trial outcomes from ongoing organic agriculture studies.</p>
+  </div>
+
+  <div class="filter-tabs fade-up">
+    <button class="filter-tab active" onclick="filterFindings('all', this)">All Findings</button>
+    <button class="filter-tab" onclick="filterFindings('soil', this)">Soil Health</button>
+    <button class="filter-tab" onclick="filterFindings('crop', this)">Crop Yield</button>
+    <button class="filter-tab" onclick="filterFindings('pest', this)">Pest Control</button>
+    <button class="filter-tab" onclick="filterFindings('water', this)">Water Use</button>
+  </div>
+
+  <div class="dashboard-grid fade-up">
+
+    <!-- Chart Card -->
+    <div class="dash-card wide">
+      <div class="card-header">
+        <div class="card-title">Yield Improvement Over Years</div>
+        <span class="card-badge">2019 – 2024</span>
+      </div>
+      <canvas id="yieldChart" height="200"></canvas>
+    </div>
+
+    <!-- Metrics Sidebar -->
+    <div class="dash-card tall">
+      <div class="card-header">
+        <div class="card-title">Key Metrics</div>
+      </div>
+      <div class="metrics-list">
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Soil Organic Matter</span>
+            <span class="metric-val">+38%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="78%"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Water Efficiency</span>
+            <span class="metric-val">+52%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="85%"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Pesticide Reduction</span>
+            <span class="metric-val">-67%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="92%"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Crop Diversity Index</span>
+            <span class="metric-val">+44%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="68%"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Carbon Sequestration</span>
+            <span class="metric-val">+29%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="58%"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <span class="metric-name">Farmer Income Growth</span>
+            <span class="metric-val">+33%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%" data-width="71%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Findings List -->
+    <div class="dash-card full">
+      <div class="card-header">
+        <div class="card-title">Research Highlights</div>
+        <span class="card-badge">Latest 2024</span>
+      </div>
+      <div class="findings-list">
+        <div class="finding-item" data-category="soil">
+          <h4>Biochar Integration Boosts Soil Carbon by 38%</h4>
+          <p>A 3-year trial in Chiang Mai demonstrated that biochar amendment significantly improved soil water retention and microbial diversity.</p>
+          <div class="finding-meta">
+            <span class="finding-tag">Soil Health</span>
+            <span class="finding-tag">2024</span>
+            <span class="finding-tag">Chiang Mai</span>
+          </div>
+        </div>
+        <div class="finding-item" data-category="crop">
+          <h4>Intercropping System Increases Net Yield by 24%</h4>
+          <p>Combining legumes with staple crops improved nitrogen fixation and reduced competition for nutrients in tropical climates.</p>
+          <div class="finding-meta">
+            <span class="finding-tag">Crop Yield</span>
+            <span class="finding-tag">2023</span>
+            <span class="finding-tag">Central Thailand</span>
+          </div>
+        </div>
+        <div class="finding-item" data-category="pest">
+          <h4>Botanical Pesticides Reduce Chemical Use by 67%</h4>
+          <p>Neem-based and lemongrass extracts proved effective against common pests while preserving beneficial insect populations.</p>
+          <div class="finding-meta">
+            <span class="finding-tag">Pest Control</span>
+            <span class="finding-tag">2023</span>
+            <span class="finding-tag">Khon Kaen</span>
+          </div>
+        </div>
+        <div class="finding-item" data-category="water">
+          <h4>Drip Irrigation + Mulching Cuts Water Use by 52%</h4>
+          <p>Combined moisture management strategies maintained crop health during dry seasons with significantly less irrigation.</p>
+          <div class="finding-meta">
+            <span class="finding-tag">Water Use</span>
+            <span class="finding-tag">2024</span>
+            <span class="finding-tag">Northeast Region</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="fade-up">
+    <div class="section-tag">Our Researchers</div>
+    <h2 class="section-title">The Minds Behind RIMOA</h2>
+    <p class="section-sub">A multidisciplinary team of agronomists, soil scientists, and data analysts working toward a sustainable agricultural future.</p>
+  </div>
+
+  <div class="team-grid fade-up">
+    <div class="team-card">
+      <div class="team-avatar bg1">👩‍🔬</div>
+      <div class="team-info">
+        <div class="team-name">Dr. Amara Srisuk</div>
+        <div class="team-role">Lead Agronomist</div>
+        <div class="team-bio">15+ years in organic crop systems and sustainable soil management across Southeast Asia.</div>
+        <div class="team-socials">
+          <a class="social-btn" title="Email">📧</a>
+          <a class="social-btn" title="Research">📄</a>
+        </div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar bg2">👨‍💻</div>
+      <div class="team-info">
+        <div class="team-name">Krit Thanapon</div>
+        <div class="team-role">Data Scientist</div>
+        <div class="team-bio">Specializes in precision agriculture analytics, remote sensing, and machine learning for crop prediction.</div>
+        <div class="team-socials">
+          <a class="social-btn" title="Email">📧</a>
+          <a class="social-btn" title="Research">📄</a>
+        </div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar bg3">👩‍🌾</div>
+      <div class="team-info">
+        <div class="team-name">Dr. Nipa Charoenwong</div>
+        <div class="team-role">Soil Ecologist</div>
+        <div class="team-bio">Research focus on microbial biodiversity, composting systems, and soil food web dynamics.</div>
+        <div class="team-socials">
+          <a class="social-btn" title="Email">📧</a>
+          <a class="social-btn" title="Research">📄</a>
+        </div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar bg4">👨‍🔬</div>
+      <div class="team-info">
+        <div class="team-name">Thanawat Ruangrit</div>
+        <div class="team-role">Field Research Lead</div>
+        <div class="team-bio">Coordinates on-ground trials with farming communities in Northern and Northeastern Thailand.</div>
+        <div class="team-socials">
+          <a class="social-btn" title="Email">📧</a>
+          <a class="social-btn" title="Research">📄</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="partners-header fade-up">
+    <div>
+      <div class="section-tag">Associated Organizations</div>
+      <h2 class="section-title">Our Partners & Collaborators</h2>
+    </div>
+    <p class="section-sub" style="max-width:300px">Working together with leading institutions to amplify our research impact.</p>
+  </div>
+
+  <div class="partners-grid fade-up">
+    <div class="partner-card">
+      <div class="partner-logo">🏛️</div>
+      <div class="partner-name">Kasetsart University</div>
+      <div class="partner-type">Academic Partner</div>
+      <div class="partner-badge badge-gold">Gold Partner</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo">🌿</div>
+      <div class="partner-name">FAO Thailand</div>
+      <div class="partner-type">International Organization</div>
+      <div class="partner-badge badge-gold">Gold Partner</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo">🔬</div>
+      <div class="partner-name">BIOTEC</div>
+      <div class="partner-type">Research Institute</div>
+      <div class="partner-badge badge-silver">Research Partner</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo">🌾</div>
+      <div class="partner-name">Thai Organic Trust</div>
+      <div class="partner-type">Certification Body</div>
+      <div class="partner-badge badge-silver">Certification</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo">💧</div>
+      <div class="partner-name">Water for Agriculture</div>
+      <div class="partner-type">NGO</div>
+      <div class="partner-badge badge-silver">Field Partner</div>
+    </div>
+    <div class="partner-card">
+      <div class="partner-logo">🤝</div>
+      <div class="partner-name">UNDP Thailand</div>
+      <div class="partner-type">Development Partner</div>
+      <div class="partner-badge badge-silver">Funding Partner</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="fade-up">
+    <div class="section-tag">Get In Touch</div>
+    <h2 class="section-title">Let's Grow<br>Together</h2>
+    <p class="section-sub">Whether you're a researcher, farmer, or organization — we'd love to connect and explore collaboration opportunities.</p>
+
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div class="contact-detail">
+          <h4>Location</h4>
+          <p>Bangkok, Thailand</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📧</div>
+        <div class="contact-detail">
+          <h4>Email</h4>
+          <p>research@rimoa.org</p>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div class="contact-detail">
+          <h4>Phone</h4>
+          <p>+66 2 000 0000</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fade-up">
+    <div class="contact-form" id="contactForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" placeholder="Amara">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" placeholder="Srisuk">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label>Inquiry Type</label>
+        <select>
+          <option value="">Select a topic...</option>
+          <option>Research Collaboration</option>
+          <option>Partnership Opportunity</option>
+          <option>Media & Press</option>
+          <option>General Inquiry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="Tell us about your interest or project..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitForm()">Send Message →</button>
+    </div>
+    <div class="form-success" id="formSuccess">
+      ✅ Thank you! Your message has been sent. We'll be in touch within 2 business days.
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">RIM<span>OA</span></div>
+  <div class="footer-copy">© 2024 RIMOA. Research Institute of Modern Organic Agriculture.</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#research">Research</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+// Animated counters
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const duration = 1500;
+  const step = target / (duration / 16);
+  let current = 0;
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= target) { current = target; clearInterval(timer); }
+    el.textContent = Math.floor(current);
+  }, 16);
+}
+
+// Chart
+const ctx = document.getElementById('yieldChart').getContext('2d');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['2019','2020','2021','2022','2023','2024'],
+    datasets: [{
+      label: 'Organic Yield Index',
+      data: [62, 68, 75, 82, 91, 100],
+      borderColor: '#2d7a45',
+      backgroundColor: 'rgba(45,122,69,0.08)',
+      tension: 0.4, fill: true,
+      pointBackgroundColor: '#2d7a45',
+      pointRadius: 5, pointHoverRadius: 8,
+      borderWidth: 2.5
+    },{
+      label: 'Conventional Benchmark',
+      data: [80, 81, 82, 82, 83, 84],
+      borderColor: 'rgba(201,168,76,0.6)',
+      backgroundColor: 'transparent',
+      tension: 0.2, fill: false,
+      pointBackgroundColor: '#c9a84c',
+      pointRadius: 4, borderDash: [6,4],
+      borderWidth: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { labels: { font: { family: 'DM Sans', size: 12 }, color: '#5a7a62' } }
+    },
+    scales: {
+      x: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#5a7a62', font: { family: 'DM Sans' } } },
+      y: { grid: { color: 'rgba(0,0,0,0.04)' }, ticks: { color: '#5a7a62', font: { family: 'DM Sans' } } }
+    }
+  }
+});
+
+// Filter findings
+function filterFindings(cat, btn) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.finding-item').forEach(item => {
+    if (cat === 'all' || item.dataset.category === cat) {
+      item.classList.remove('hidden');
+    } else {
+      item.classList.add('hidden');
+    }
+  });
+}
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      // Counters
+      entry.target.querySelectorAll('.counter').forEach(animateCounter);
+      // Progress bars
+      entry.target.querySelectorAll('.progress-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Hero counters on load
+setTimeout(() => {
+  document.querySelectorAll('.hero .counter').forEach(animateCounter);
+}, 600);
+
+// Contact form
+function submitForm() {
+  document.getElementById('contactForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
